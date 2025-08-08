@@ -1,0 +1,656 @@
+/* Grundläggande stil och typsnitt */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+:root {
+    --primary-color: #296B9F;
+    --secondary-color: #002045;
+    --accent-color: #F2B300;
+    --background-color: #ffffff;
+    --text-color: #002045;
+    --slide-transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Pitch deck container */
+.pitch-deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.pitch-deck::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('logo2.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    opacity: 0;
+    z-index: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.pitch-deck.watermark-visible::after {
+    opacity: 0.05;
+}
+
+/* Slide-styling */
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* För att hantera sidfot */
+    align-items: center;
+    /* justify-content: space-between; REMOVED */
+    padding: 2.5% 5%; /* Adjusted padding */
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: var(--slide-transition);
+    background-color: var(--background-color);
+}
+
+#intro-slide {
+    z-index: 20;
+    background-color: var(--background-color);
+    overflow: hidden; /* För att hantera zoom-effekt */
+}
+
+.slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    z-index: 1;
+}
+
+.slide.exit {
+    transform: translateX(-100%);
+}
+
+/* Intro-animation element */
+.intro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: 5%;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.intro-container.visible {
+    opacity: 1;
+}
+
+.intro-image {
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.1);
+    transition: transform 7s ease-out;
+}
+
+.intro-container.visible .intro-image {
+    transform: scale(1); /* Långsam utzoomning */
+}
+
+.intro-logo {
+    width: 40%;
+    max-width: 500px;
+    height: auto;
+}
+
+/* Innehållslayouter */
+.slide-content {
+    width: 100%;
+    max-width: 1100px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.slide-content.centered {
+    text-align: center;
+}
+
+.slide-content.split {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    gap: 4rem;
+}
+
+.slide-content.split.reverse {
+    flex-direction: row-reverse;
+}
+
+.split .text-content { flex: 1; }
+.split .media-content { flex: 1; }
+
+.media-content img {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.title-image img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+/* Bildspel för titelsida */
+.title-image-slideshow {
+    position: relative;
+    width: 100%;
+    max-width: 800px; /* Samma som den gamla bilden */
+    height: 400px; /* Samma som den gamla bilden */
+    margin: 0 auto 2rem auto;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #ffffff; /* Bakgrundsfärg medan bilder laddas */
+}
+
+.title-image-slideshow img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ändrad till contain för att visa hela loggan */
+    padding: 1rem; /* Lägg till lite luft runt logotyperna */
+    box-sizing: border-box; /* Inkludera padding i storleken */
+    opacity: 0;
+    animation: slideFadeInOut 14s infinite; /* Total animationstid = 2s per bild * 7 bilder */
+}
+
+@keyframes slideFadeInOut {
+    0% { opacity: 0; transform: scale(0.98); }
+    3.57% { opacity: 1; transform: scale(1); }   /* 0.5s fade in */
+    10.71% { opacity: 1; transform: scale(1); }  /* 1s hold */
+    14.28% { opacity: 0; transform: scale(0.98); } /* 0.5s fade out */
+    100% { opacity: 0; }
+}
+
+/* Fördröjning för varje bild */
+.title-image-slideshow img:nth-child(1) { animation-delay: 0s; }
+.title-image-slideshow img:nth-child(2) { animation-delay: 2s; }
+.title-image-slideshow img:nth-child(3) { animation-delay: 4s; }
+.title-image-slideshow img:nth-child(4) { animation-delay: 6s; }
+.title-image-slideshow img:nth-child(5) { animation-delay: 8s; }
+.title-image-slideshow img:nth-child(6) { animation-delay: 10s; }
+.title-image-slideshow img:nth-child(7) { animation-delay: 12s; }
+
+
+/* List-layout */
+.list-layout {
+    text-align: left;
+}
+
+.list-layout ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 2rem;
+}
+
+.list-layout li {
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.list-layout li::before {
+    content: '■';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.list-layout li strong {
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* Specific font size for the AI analogy slide */
+#ai-analogy-slide .list-layout li {
+    font-size: 1.0rem;
+    margin-bottom: 1.2rem; /* Slightly reduce margin as well */
+}
+
+p.example {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #555;
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    border-left: 3px solid #eee;
+}
+
+p.emphasis {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Citation block style */
+.citation {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    border-left: 4px solid var(--accent-color);
+    background-color: #f8f9fa;
+    border-radius: 0 8px 8px 0;
+}
+
+.citation p {
+    font-size: 1rem;
+    font-style: italic;
+    color: #333;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.citation p:first-child {
+    margin-bottom: 1rem;
+}
+
+.citation a {
+    color: var(--primary-color);
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.citation a:hover {
+    text-decoration: underline;
+}
+
+/* Keyframes for logo animation */
+@keyframes floatUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Presenter-sektion (nu i slide-content) */
+.presenter-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 2rem; /* Add space below the subtitle */
+}
+
+.presenter-info p {
+    margin-top: 0;
+    color: var(--text-color); /* Explicitly set text color */
+}
+
+.presenter-photo {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    margin-bottom: 0.25rem;
+    border: 2px solid var(--accent-color);
+}
+
+/* Sidfot för titelsida */
+.slide-footer {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* Push logo to the right */
+    align-items: flex-end;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    padding: 0 5%;
+}
+
+.footer-logo {
+    height: 40px;
+}
+
+/* Textelement */
+h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+/* Specific style for the long title */
+#title-slide h1 {
+    font-size: 2.8rem;
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.slide-content.centered h2 {
+    text-align: center;
+}
+
+p {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    opacity: 0.8;
+}
+
+/* Navigation */
+.nav-arrow, .nav-dots {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.nav-visible .nav-arrow, .nav-visible .nav-dots {
+    opacity: 1;
+}
+
+.nav-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.5s ease-in-out;
+}
+
+.nav-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.nav-arrow.prev { left: 20px; }
+.nav-arrow.next { right: 20px; }
+
+.nav-dots {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 12px;
+}
+
+.nav-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-dot.active {
+    background-color: var(--accent-color);
+    transform: scale(1.2);
+}
+
+/* Generellt bildspel för slides */
+.dynamic-slideshow {
+    position: relative;
+    width: 100%;
+    height: 450px; /* Standardhöjd */
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+}
+
+.dynamic-slideshow img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Använd contain för att visa hela bilden */
+    opacity: 0;
+    animation: simpleFade 16s infinite; /* 4s per bild * 4 bilder */
+}
+
+.dynamic-slideshow img:nth-child(2) {
+    animation-delay: 4s;
+}
+.dynamic-slideshow img:nth-child(3) {
+    animation-delay: 8s;
+}
+.dynamic-slideshow img:nth-child(4) {
+    animation-delay: 12s;
+}
+
+@keyframes simpleFade {
+    0% { opacity: 0; }
+    6.25% { opacity: 1; } /* 1s fade in */
+    25% { opacity: 1; }   /* 3s hold */
+    31.25% { opacity: 0; } /* 1s fade out */
+    100% { opacity: 0; }
+}
+
+/* Dynamiskt Galleri */
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: scale(0.95); }
+    20% { opacity: 1; transform: scale(1); }
+    80% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.95); }
+}
+
+.dynamic-gallery {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.dynamic-gallery img {
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-width: 45%;
+    max-height: 45%;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    opacity: 0;
+    animation: fadeInOut 8s infinite ease-in-out;
+}
+
+/* Positionera och fördröj varje bild för en slumpmässig effekt */
+.dynamic-gallery img:nth-child(1) { top: 5%; left: 5%; animation-delay: 0s; }
+.dynamic-gallery img:nth-child(2) { top: 50%; left: 50%; animation-delay: -6s; }
+.dynamic-gallery img:nth-child(3) { top: 10%; right: 10%; animation-delay: -2s; }
+.dynamic-gallery img:nth-child(4) { bottom: 5%; left: 25%; animation-delay: -4s; }
+.dynamic-gallery img:nth-child(5) { top: 40%; left: 15%; animation-delay: -7s; }
+.dynamic-gallery img:nth-child(6) { bottom: 10%; right: 5%; animation-delay: -5s; }
+.dynamic-gallery img:nth-child(7) { top: 25%; left: 45%; animation-delay: -3s; }
+
+/* Full-media slide styles */
+#full-media-slide {
+    padding: 0;
+    align-items: center;
+    justify-content: flex-start; /* Centrera text-boxen vertikalt */
+}
+
+.full-media-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 0;
+    filter: brightness(0.7); /* Mörka ner bakgrunden lite för kontrast */
+}
+
+.full-media-background .animated-image-container,
+.full-media-background .video-container {
+    flex: 1;
+    height: 100%;
+    box-shadow: none;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.full-media-background .video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay-content {
+    background: rgba(0, 32, 69, 0.75); /* Mörkblå från paletten */
+    color: #fff;
+    padding: 2rem 3rem;
+    border-radius: 8px;
+    max-width: 45%;
+    margin-left: 5%;
+    align-self: center;
+}
+
+.overlay-content h2,
+.overlay-content li,
+.overlay-content li strong {
+    color: #fff;
+}
+
+.overlay-content li::before {
+    color: var(--accent-color);
+}
+
+.animated-portrait {
+    opacity: 0;
+    transform: scale(1.05) translateX(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.slide.active .animated-portrait {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+}
+
+/* Terminal Outro Slide */
+#terminal-slide {
+    background-color: #1e1e1e;
+    align-items: center;
+    justify-content: center;
+}
+
+.terminal-window {
+    width: 80%;
+    max-width: 900px;
+    background-color: #000;
+    border: 1px solid #444;
+    border-radius: 8px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.terminal-header {
+    background-color: #333;
+    padding: 8px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+.terminal-header span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.terminal-header span:nth-child(1) { background-color: #ff5f56; }
+.terminal-header span:nth-child(2) { background-color: #ffbd2e; }
+.terminal-header span:nth-child(3) { background-color: #27c93f; }
+
+.terminal-body {
+    padding: 2rem;
+    color: #0f0;
+    text-align: left;
+}
+
+.terminal-line {
+    margin: 0 0 1rem 0;
+    font-size: 1.4rem;
+    white-space: normal;
+    min-height: 1.5em; /* Förhindra att layouten hoppar */
+    line-height: 1.5em;
+}
+
+.typing-cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1.4rem;
+    background-color: #0f0;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* Layout för flera bilder */
+.media-grid {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 1rem;
+    align-items: stretch; /* Stretch items to fill the cell */
+}
+
+.media-grid img {
+    width: 100%;
+    height: 100%; /* Fill the stretched cell height */
+    object-fit: contain; /* Maintain aspect ratio, fit within area */
+}
+
+@media (max-width: 768px) {
+    .media-grid {
+        grid-template-columns: 1fr;
+    }
+}
