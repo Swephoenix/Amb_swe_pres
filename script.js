@@ -9,21 +9,49 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSlide = 0;
     let isAnimating = false;
 
-    // --- Intro Animation ---
-    function runIntro() {
-        setTimeout(() => {
-            introContainer.classList.add('visible');
-        }, 200); // Tona in containern
+    // --- Mosaic Intro Animation ---
+    function runMosaicIntro() {
+        const container = document.querySelector('.mosaic-container');
+        if (!container) return;
 
-        setTimeout(() => {
-            introContainer.classList.remove('visible');
-        }, 3500); // Tona ut containern
+        const gridSize = 10; // 10x10 grid
+        container.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+        container.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+        
+        const tiles = [];
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const tile = document.createElement('div');
+            tile.classList.add('mosaic-tile');
+            
+            const x = i % gridSize;
+            const y = Math.floor(i / gridSize);
+            
+            tile.style.backgroundSize = `${gridSize * 100}% ${gridSize * 100}%`;
+            tile.style.backgroundPosition = `${(x / (gridSize - 1)) * 100}% ${(y / (gridSize - 1)) * 100}%`;
+            
+            container.appendChild(tile);
+            tiles.push(tile);
+        }
 
+        // Shuffle tiles for random reveal
+        for (let i = tiles.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+        }
+
+        // Reveal tiles one by one
+        tiles.forEach((tile, i) => {
+            setTimeout(() => {
+                tile.classList.add('visible');
+            }, i * 25); // Stagger the animation
+        });
+
+        // Transition to the next slide after the mosaic is complete
         setTimeout(() => {
-            goToSlide(1, 'next'); // Gå till nästa slide
-            deck.classList.add('watermark-visible'); // Visa vattenstämpel
-            document.body.classList.add('nav-visible'); // Visa navigation
-        }, 4200); // Starta övergången
+            goToSlide(1, 'next');
+            deck.classList.add('watermark-visible');
+            document.body.classList.add('nav-visible');
+        }, (tiles.length * 25) + 1500); // Wait for mosaic + extra delay
     }
 
     // Skapa navigeringsprickar
@@ -127,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialisering
     createDots();
     updateNav();
-    runIntro(); // Starta intro-sekvensen
+    runMosaicIntro(); // Starta intro-sekvensen
 
     // --- Terminal Animation ---
     const terminalSlide = document.getElementById('terminal-slide');
